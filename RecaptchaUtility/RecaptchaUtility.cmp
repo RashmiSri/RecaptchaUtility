@@ -1,0 +1,38 @@
+<aura:component controller="RecaptchaUtility" implements="flexipage:availableForRecordHome,force:hasRecordId,flexipage:availableForAllPageTypes" access="global">
+    <aura:attribute type="String" name="message" default="hello"/>
+    <aura:attribute type="Integer" name="height" default="150"/>
+    <!-- Initialise vfHost with visualforce domain -->
+    <aura:attribute type="String" name="vfHost" default="<your-org-name>-dev-ed--c.visualforce.com"/>
+    <aura:attribute type="String" name="title" default="Create Lead"/>
+    <!-- Create custom label for reCaptcha secret key and assign this value to reCaptchaSecretKey attribute-->
+    <aura:attribute type="String" name="reCaptchaSecretKey" default="{!$Label.c.Google_ReCAPTCHA_API_Secret_Key}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+<lightning:card>
+   
+    <aura:set attribute="title">
+        <div class="slds-align_absolute-center slds-page-header">
+        <lightning:icon iconName="standard:lead" size="medium"/>
+        &nbsp;&nbsp;<span class="slds-text-heading_medium"><b>{!v.title }</b></span>
+            </div>
+    </aura:set>
+     <div class="slds-box slds-has-top-magnet">
+     <div class="slds-m-bottom_medium">
+    <lightning:recordEditForm aura:id="leadForm" objectApiName="Lead">
+        <lightning:messages />
+        <div class="slds-grid  slds-gutters slds-grid_align-center">
+            <div class="slds-col slds-size_1-of-2">
+                <lightning:inputField fieldName="Salutation" />
+                <lightning:inputField fieldName="FirstName" />
+                <lightning:inputField fieldName="LastName" />                
+            </div>
+            <div class="sld-col slds-size_1-of-2">
+                <lightning:inputField fieldName="Company" /> 
+                <lightning:inputField fieldName="Email" />
+            </div>
+        </div>
+    </lightning:recordEditForm>  
+     </div>
+    <iframe aura:id="vfFrame" scrolling="yes" src="{!'https://' + v.vfHost + '/apex/vfReCAPTCHA'}" width="100%" height="{!v.height + 'px'}" frameborder="0" onclick="{!c.myAction}" />
+</div>
+    </lightning:card>	
+</aura:component>
