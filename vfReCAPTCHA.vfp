@@ -1,0 +1,72 @@
+<apex:page lightningStylesheets="true" applyBodyTag="true">
+    <apex:includeScript value="https://www.google.com/recaptcha/api.js"/>
+    <apex:slds />
+    <style>
+        body,div {
+        background:transparent!important;
+        } 
+        .centerCaptcha {
+        text-align:center;
+        }
+        .g-recaptcha {
+        display:inline;
+        }
+        .hideWidget {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 1.5s linear;
+        }
+    </style>    
+    <input id="sub" type="hidden" value="true"/>
+    <input id="res" type="hidden"/>
+    <apex:outputPanel id="reCaptchaContainer" layout="block" styleClass="slds-show">
+    <!--<apex:form >  -->      
+            <div class="slds-align_absolute-center">               
+                <div id="widgetContainer" class="centerCaptcha">  
+                <!-- Add custom label for Site Key in data-sitekey-->
+                <div id="widget1" class="g-recaptcha" data-callback="prepareResponse" data-size="compact normal" data-sitekey="{!$Label.Google_ReCAPTCHA_API_Site_Key}" 
+                     style="transform: scale(0.74);-webkit-transform:scale(0.74);">
+                </div>
+                 </div>
+            </div>
+       <!-- </apex:form> -->
+        <br/>
+        
+        <div class="slds-align_absolute-center">
+            <button onclick="submitForm()" id="formButton" class="slds-button slds-button_brand" disabled="true"> Submit </button>            	
+        </div>           
+    </apex:outputPanel>
+    <script>
+    // lexOrigin will be Url of your org's lightning domain
+    var lexOrigin = "https://<your-org-name>-dev-ed.lightning.force.com";
+    var resizeVar = 0;
+    window.addEventListener("message", function(event) {
+        if (event.origin !== lexOrigin) {
+            // Not the expected origin: reject message!
+            return;
+        }
+        // Handle message
+        if(event.data == 'verified') {
+            setTimeout(function(){ 
+                document.getElementById("widget1").classList.add("hideWidget");
+                document.getElementById("formButton").disabled = false;
+             }, 3000);
+            
+         }
+        console.log(event.data);
+    }, false);
+    function adjustFrameHeight(size) {
+        alert('size is: '+size);
+        parent.postMessage('{"size":'+size+'}', lexOrigin);
+    }
+    function submitForm() {
+        parent.postMessage('{"submit":'+document.getElementById("sub").value+'}', lexOrigin);
+    }    
+    function prepareResponse(response) {
+        document.getElementById("res").value = response;
+        var res = document.getElementById("res").value;
+        parent.postMessage('{"response":"'+res+'"}', lexOrigin);
+    }
+    </script>
+ 
+</apex:page>
