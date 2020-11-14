@@ -1,0 +1,11 @@
+.THIS {
+}
+.THIS .slds-card__header{
+   padding:0!important; 
+}
+.THIS .slds-card__header-title {
+    display:block!important;
+}
+.THIS .slds-box {
+    border:0!important;    
+}
