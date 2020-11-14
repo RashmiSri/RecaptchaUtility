@@ -1,0 +1,38 @@
+public class RecaptchaUtility {
+@AuraEnabled
+    public static list<Lead> getRecords(){
+        return [select id, FirstName,LastName,Company,phone,Email,Title from Lead];
+    }  
+    
+    @AuraEnabled
+    public static Boolean verifyResponse(String secretKey, String token){
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        Integer prev = 0;
+        prev = Limits.getHeapSize(); // we are doing it after allocating memory on Integer
+        String params='secret='+secretKey+'&response='+token;
+        Integer curr = Limits.getHeapSize(); // we are doing it right in time of Integer initialization to ensure we have the heap size right after allocating space for String
+        String url = 'https://www.google.com/recaptcha/api/siteverify?'+params;
+        request.setEndpoint(url);
+        request.setMethod('GET');
+       // request.setHeader('Content-Type', 'application/json');
+		//request.setHeader('Content-Length','0');
+        //request.setBody();
+
+       // System.debug('BODY is '+request.getBody());
+        HttpResponse response = http.send(request);
+        // Parse the JSON response
+        if (response.getStatusCode() != 200) {
+            System.debug('The status code returned was not expected: ' +
+                         response.getStatusCode() + ' ' + response.getStatus());
+        } else {
+           // System.debug();
+            Map<String, Object> m = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+            if(m.get('error-codes') == NULL) {
+                return (m.get('success')==true?true:false);
+            }
+            System.debug('Error Codes: '+m.get('error-codes'));            
+        }        
+        return false;
+    }      
+}
