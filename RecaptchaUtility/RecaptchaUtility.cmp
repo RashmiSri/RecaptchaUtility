@@ -2,7 +2,7 @@
     <aura:attribute type="String" name="message" default="hello"/>
     <aura:attribute type="Integer" name="height" default="150"/>
     <!-- Initialise vfHost with visualforce domain -->
-    <aura:attribute type="String" name="vfHost" default="<your-org-name>-dev-ed--c.visualforce.com"/>
+    <aura:attribute type="String" name="vfHost" default="{!$Label.c.EP_CRM_VFDomainURL}"/>
     <aura:attribute type="String" name="title" default="Create Lead"/>
     <!-- Create custom label for reCaptcha secret key and assign this value to reCaptchaSecretKey attribute-->
     <aura:attribute type="String" name="reCaptchaSecretKey" default="{!$Label.c.Google_ReCAPTCHA_API_Secret_Key}"/>
@@ -33,6 +33,6 @@
     </lightning:recordEditForm>  
      </div>
     <iframe aura:id="vfFrame" scrolling="yes" src="{!'https://' + v.vfHost + '/apex/vfReCAPTCHA'}" width="100%" height="{!v.height + 'px'}" frameborder="0" onclick="{!c.myAction}" />
-</div>
+    </div>
     </lightning:card>	
 </aura:component>
