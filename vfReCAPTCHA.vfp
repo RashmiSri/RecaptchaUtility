@@ -17,6 +17,7 @@
             transition: visibility 0s, opacity 1.5s linear;
         }
     </style>    
+    <input id="lightningURL" type="hidden" value="{!$Label.EP_CRM_LightningDomainURL}"/>
     <input id="sub" type="hidden" value="true"/>
     <input id="res" type="hidden"/>
     <apex:outputPanel id="reCaptchaContainer" layout="block" styleClass="slds-show">
@@ -38,7 +39,7 @@
     </apex:outputPanel>
     <script>
     // lexOrigin will be Url of your org's lightning domain
-    var lexOrigin = "https://<your-org-name>-dev-ed.lightning.force.com";
+    var lexOrigin = document.getElementById("lightningURL").value;
     var resizeVar = 0;
     window.addEventListener("message", function(event) {
         if (event.origin !== lexOrigin) {
